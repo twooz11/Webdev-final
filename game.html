@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Snake Game</title>
+<style>
+body {
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+canvas {
+  background-color: #fff;
+  border: 2px solid #000;
+}
+</style>
+</head>
+<body>
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const gridSize = 20;
+const gridWidth = canvas.width / gridSize;
+const gridHeight = canvas.height / gridSize;
+
+let snake = [{ x: Math.floor(gridWidth / 2), y: Math.floor(gridHeight / 2) }];
+let food = { x: 5, y: 5 };
+let dx = 0;
+let dy = 0;
+let gameStarted = false;
+let gameSpeed = 100; // milliseconds
+
+function generateFood() {
+  food = {
+    x: Math.floor(Math.random() * gridWidth),
+    y: Math.floor(Math.random() * gridHeight)
+  };
+}
+
+function drawSnake() {
+  ctx.fillStyle = "green";
+  snake.forEach(part => {
+    ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize, gridSize);
+  });
+}
+
+function drawFood() {
+  ctx.fillStyle = "red";
+  ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+}
+
+generateFood();
+drawSnake();
+drawFood();
+
+document.addEventListener('keydown', (event) => {
+  switch (event.keyCode) {
+    case 37: // Left
+      if (dx !== 1) { dx = -1; dy = 0; gameStarted = true; }
+      break;
+    case 38: // Up
+      if (dy !== 1) { dx = 0; dy = -1; gameStarted = true; }
+      break;
+    case 39: // Right
+      if (dx !== -1) { dx = 1; dy = 0; gameStarted = true; }
+      break;
+    case 40: // Down
+      if (dy !== -1) { dx = 0; dy = 1; gameStarted = true; }
+      break;
+  }
+});
+
+function gameLoop() {
+  const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+  if (gameStarted) {
+    if (head.x < 0 || head.x >= gridWidth || head.y < 0 || head.y >= gridHeight || checkSelfCollision(head)) {
+      alert('Game Over!');
+      return;
+    }
+  }
+
+  if (head.x === food.x && head.y === food.y) {
+    generateFood();
+  } else {
+    snake.pop();
+  }
+
+  snake.unshift(head);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawSnake();
+  drawFood();
+  setTimeout(gameLoop, gameSpeed); // Use setTimeout for speed control
+}
+
+function checkSelfCollision(head) {
+  return snake.some(part => part.x === head.x && part.y === head.y);
+}
+
+gameLoop();
+</script>
+</body>
+</html>

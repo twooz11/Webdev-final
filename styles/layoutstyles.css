@@ -1,0 +1,31 @@
+.header {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 500px;
+    z-index: 2;
+    background-color: black;
+}
+
+.subheader {
+    float: left;
+}
+
+.mainbody {
+    top: 114px;
+    right: 114px;
+    left: 114px;
+    bottom: 5px;
+    padding-right: 5px;
+    padding-top: 40px;
+    background-color: tan;
+}
+
+.footer {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 100px;
+    z-index: 2;
+    background-color: black;
+}
